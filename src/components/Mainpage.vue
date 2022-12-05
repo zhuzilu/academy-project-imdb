@@ -2,6 +2,7 @@
     <div>
         <Header @open-filters="showFilters" />
             <div id="filter__container" v-show="show">
+                
                 <div class="slider__controls">
                     <a href="#" :id="n" v-for="n in slides.length" :key="n" class="slider__controls__link"
                         @click="moveSlider(n)">{{n}}</a>
