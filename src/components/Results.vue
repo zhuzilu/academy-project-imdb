@@ -3,7 +3,7 @@
     <div class="results">
       <h3 class="h3__title">Results from API</h3>
       <div class="card__section">
-        <div class="card__container" @click="dragStart(movie)" @dragend="dragEnd(movie)" draggable="true" 
+        <div class="card__container" @click="dragStart()" @dragend="dragEnd()" draggable="true" 
           v-for="(movie, index) in getMovies" :key="index">
           <img class="card__poster" src="http://image.tmdb.org/t/p/w500//gh4cZbhZxyTbgxQPxD0dOudNPTn.jpg" alt="">
           <div class="card__buttons">
@@ -51,22 +51,30 @@ import createStore from "@/store/index";
 
 export default defineComponent({
   name: "Results",
-
+    watch: {
+        'createStore.getters.getMovies': {
+            immediate: true,
+            handler() {
+            createStore.dispatch('getMovies');
+            }
+        }
+    },
   computed: {
     getMovies() {
       return createStore.state.movies;
-    }
+    },
+    
   },
      methods: {
-    dragStart: function(movie) {
+    dragStart: function() {
         this.className += ' hold';
     },
 
-    dragEnd: function(movie: {}) {
+    dragEnd: function() {
         const imgDraggable = document.querySelector('.card__container');
 
         imgDraggable.className = 'card__container'; 
-        createStore.dispatch("getMovie", movie);
+        //createStore.dispatch("getMovie", movie);
     },
 
     dragOver: function(e) {

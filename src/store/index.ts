@@ -12,23 +12,23 @@ export default createStore({
       filterYear: true,
       filterDuration: true,
       filterRating: true,
-      filterGenre: false,
-      typeTV: true,
-      typeMovie: true,
-      mood: [] as any [],
+      filterGenre: true,
+      typeTV: false,
+      typeMovie: false,
+      mood: ["Comedy", "Drama"] as  string[],
       movie: {},
     },
-    getters: {
-      getFilters({ state }){  
+    /*getters: {
+      getFilters(state){  
         let filters = '';
-        filters += `minRating=${state.rating.minRating}&maxRat`
+        filters += `&minRating=${state.minRating}&maxRating=${state.maxRating}`
         if(state.mood.length > 0){
           filters += `category=${mood.split().join(',')}`
         }
         
         return filters;
       }
-    },
+    },*/
     mutations: {
         setMovies(state, payload) {
           console.log("setmovies");
@@ -57,6 +57,9 @@ export default createStore({
         },
         setMovie(state, payload){
           state.movie = payload;
+        },
+        mood(state, payload){
+          state.mood = payload;
         }
     },
     actions: {
@@ -81,28 +84,62 @@ export default createStore({
       getMovie(context, payload) {
         context.commit("setMovie", payload);
       },
+      getFilterGenre({ commit, state}, genre) {
+        if(state.mood.includes(genre)) {
+          const newMood = state.mood.filter(mood => mood!== genre);
+          commit("mood", newMood);
+          console.log("dentro if getfiltergenre");
+          console.log(newMood);
+          console.log(state.mood);
+        }
+        else {
+          commit("mood", [...state.mood, genre]);
+          console.log("dentro else getfiltergenre");
+          console.log(state.mood);
+        }
+      },
       async getMovies(context) {
         let res;
-        const filters = context.getters.getFilters();
-        if (this.state.filterYear && this.state.filterDuration && this.state.filterRating && !this.state.typeTV && !this.state.typeMovie && !this.state.filterGenre) {
+        //const filters = context.getters.getFilters();
+        if ( !this.state.typeTV && !this.state.typeMovie && !this.state.filterGenre) {
             console.log("primer if");
-              res = await fetch(`http://localhost:8080/search/?maxNHits=10&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minRating=${this.state.minRating}&maxRating=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=tvSeries,movie`);
-        
-            } else if (this.state.filterYear && this.state.filterDuration && this.state.filterRating && this.state.typeTV && !this.state.typeMovie && !this.state.filterGenre) {
-              res = await fetch(`http://localhost:8080/search/?maxNHits=15&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minRating=${this.state.minRating}&maxRating=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=tvSeries`);
+              res = await fetch(`http://localhost:8080/search/?maxNHits=20&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=tvSeries,movie`);
+            console.log(res);
+
+            } else if (this.state.typeTV && !this.state.typeMovie && !this.state.filterGenre) {
+            console.log("segundo if");
+
+              res = await fetch(`http://localhost:8080/search/?maxNHits=15&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=tvSeries`);
             
-            } else if (this.state.filterYear && this.state.filterDuration && this.state.filterRating && this.state.typeTV && !this.state.typeMovie && !this.state.filterGenre) {
-              res = await fetch(`http://localhost:8080/search/?maxNHits=12&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minRating=${this.state.minRating}&maxRating=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=movie`);
-             
+            } else if (!this.state.typeTV && this.state.typeMovie && !this.state.filterGenre) {
+            console.log("tercer if");
+              res = await fetch(`http://localhost:8080/search/?maxNHits=12&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=movie`);
+            
+            }  else if ( !this.state.typeTV && !this.state.typeMovie && this.state.filterGenre) {
+              console.log("cuarto if");
+              const moodList = this.state.mood.join(",");
+              console.log(moodList);
+                res = await fetch(`http://localhost:8080/search/?maxNHits=20&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=tvSeries,movie&genres=${moodList}`);
+              console.log(res);
+  
+            } else if (this.state.typeTV && !this.state.typeMovie && this.state.filterGenre) {
+              console.log("segundo if");
+  
+                res = await fetch(`http://localhost:8080/search/?maxNHits=15&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=tvSeries&genres=${moodList}`);
+              
+            } else if (!this.state.typeTV && this.state.typeMovie && this.state.filterGenre) {
+              console.log("tercer if");
+                res = await fetch(`http://localhost:8080/search/?maxNHits=12&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=movie&genres=${moodList}`);
             }
           
           else {
-            res = await fetch(`http://localhost:8080/search/?maxNHits=12&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minRating=${this.state.minRating}&maxRating=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=movie`);
+            res = await fetch(`http://localhost:8080/search/?maxNHits=5&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=movie&genres=${moodList}`);
 
           }
       
         
         const data = await res.json();
+        console.log(data);
         const movies = data.hits;
           
         context.commit("setMovies", movies);

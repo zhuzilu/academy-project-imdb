@@ -2,7 +2,7 @@
     <div>
         <Header @open-filters="showFilters" />
             <div id="filter__container" v-show="show">
-                
+
                 <div class="slider__controls">
                     <a href="#" :id="n" v-for="n in slides.length" :key="n" class="slider__controls__link"
                         @click="moveSlider(n)">{{n}}</a>
@@ -30,26 +30,26 @@
 
                         <div class="slider__content"> 
                             <h3>What are you in the mood for?</h3>
-                                <input class="checkbox" type="checkbox" name="😆" id="Comedy">
+                                <input @click="filterMood('Comedy')" class="checkbox" type="checkbox" name="😆" id="Comedy">
                                 <label for="Comedy" title="Comedy">😆</label>
-                                <input class="checkbox" type="checkbox" name="😱" id="Horror">
+                                <input @click="filterMood('Horror')" class="checkbox" type="checkbox" name="😱" id="Horror">
                                 <label for="Horror" title="Horror">😱</label>
-                                <input class="checkbox" type="checkbox" name="😭" id="Drama">
+                                <input @click="filterMood('Drama')" class="checkbox" type="checkbox" name="😭" id="Drama">
                                 <label for="Drama" title="Drama">😭</label>
-                                <input class="checkbox" type="checkbox" name="🥰" id="Romance">
+                                <input @click="filterMood('Romance')" class="checkbox" type="checkbox" name="🥰" id="Romance">
                                 <label for="Romance" title="Romance">🥰</label>
-                                <input  class="checkbox" type="checkbox" name="🧠" id="Documentary">
+                                <input @click="filterMood('Documentary')"  class="checkbox" type="checkbox" name="🧠" id="Documentary">
                                 <label for="Documentary" title="Documentary">🧠</label>
-                                <input @click="filterMood" class="checkbox" type="checkbox" name="🧝‍♀️" id="Fantasy">
+                                <input @click="filterMood('Fantasy')" class="checkbox" type="checkbox" name="🧝‍♀️" id="Fantasy">
                                 <label for="Fantasy" title="Fantasy">🧝‍♀️</label>
-                                <input @click="filterMood" class="checkbox" type="checkbox" name="👽" id="Sci-Fi">
-                                <label for="Sci-fi" title="Sci-Fi">👽</label>
-                                <input @click="filterMood" class="checkbox" type="checkbox" name="🕵️" id="Crime">
+                                <input @click="filterMood('Sci-fi')" class="checkbox" type="checkbox" name="👽" id="Sci-fi">
+                                <label for="Sci-fi" title="Sci-fi">👽</label>
+                                <input @click="filterMood('Crime')" class="checkbox" type="checkbox" name="🕵️" id="Crime">
                                 <label for="Crime" title="Crime">🕵️</label>
-                                <input @click="filterMood" class="checkbox" type="checkbox" name="🪖" id="War">
+                                <input @click="filterMood('War')" class="checkbox" type="checkbox" name="🪖" id="War">
                                 <label for="War" title="War">🪖</label>
-                                <input @click="filterMood" class="checkbox" type="checkbox" name="🪖" id="Sports">
-                                <label for="Sports" title="Sports">⚽</label>
+                                <input @click="filterMood('Adventure')" class="checkbox" type="checkbox" name="🤠" id="Adventure">
+                                <label for="Adventure" title="Adventure">🤠</label>
                         </div>
 
                         <div class="slider__content">
@@ -60,7 +60,6 @@
                                     <input type="range" min="0" max="10" step="1" v-model="sliderMaxRating">
                                     <input type="number" min="0" max="10" step="1" v-model="sliderMaxRating">
                                 </div>
-                                <button @click="save(true)">Save</button>
                         </div>
                 
                         <div class="slider__content">
@@ -109,7 +108,6 @@ export default {
             minYear: 1995,
             maxYear: 2023,
             show: false,
-            mood: [],
         }
     },
 
@@ -120,10 +118,12 @@ export default {
             console.log(filter);
             this.$store.dispatch('getMovies', filter)
         },
-        filterMood: function(filter) {
-            let mood = [];
-            mood.push(filter);
-      
+        filterMood: function(mood) {
+            this.$store.dispatch("filterGenre", true);
+            console.log(mood);
+            this.$store.dispatch("getFilterGenre", mood);
+            this.$store.dispatch('getMovies');
+
         },
         showFilters: function(payload) {
             this.show = payload;
@@ -147,7 +147,6 @@ export default {
         getMovies() {
          return createStore.state.movies;
         },
-    
         sliderMinDuration: {
             get: function() {
                 let value = parseInt(this.minDuration)
@@ -157,40 +156,14 @@ export default {
                 value = parseInt(value)
                 if(value > this.maxDuration) {
                     this.maxDuration = value
-                }
-                this.minDuration = value
-            }
-        },
-        sliderMaxDuration: {
-            get: function() {
-                let value = parseInt(this.maxDuration)
-                return value
-            },
-            set: function(value) {
-                value = parseInt(value)
-                if(value < this.minDuration) {
-                    this.minDuration = value
-                    this.$store.dispatch("minDuration", this.minDuration)
+                    this.$store.dispatch("getMaxDuration", this.maxDuration)
+                    this.$store.dispatch('getMovies')
 
                 }
-                this.maxDuration = value
-                this.$store.dispatch("maxDuration", this.maxDuration)
-
-            }
-        },
-        sliderMinDuration: {
-            get: function() {
-                let value = parseInt(this.minDuration)
-                return value
-            },
-            set: function(value) {
-                value = parseInt(value)
-                if(value > this.maxDuration) {
-                    this.maxDuration = value
-                    this.$store.dispatch("maxDuration", this.maxDuration)
-                }
                 this.minDuration = value
-                this.$store.dispatch("minDuration", this.minDuration)
+                this.$store.dispatch("getMinDuration", this.minDuration)
+                this.$store.dispatch('getMovies')
+
 
             }
         },
@@ -203,10 +176,14 @@ export default {
                 value = parseInt(value)
                 if(value < this.minDuration) {
                     this.minDuration = value
-                    this.$store.dispatch("minDuration", this.minDuration)
+                    this.$store.dispatch("getMinDuration", this.minDuration)
+                    this.$store.dispatch('getMovies')
+
                 }
                 this.maxDuration = value
-                this.$store.dispatch("maxDuration", this.maxDuration)
+                this.$store.dispatch("getMaxDuration", this.maxDuration)
+                this.$store.dispatch('getMovies')
+
             }
         },
         sliderMinRating: {
@@ -219,13 +196,11 @@ export default {
                 if(value > this.maxRating) {
                     this.maxRating = value
                     this.$store.dispatch("getMaxRating", this.maxRating)
-                    this.$store.dispatch('getMovies');
-
+                    this.$store.dispatch('getMovies')
                 }
                 this.minRating = value
                 this.$store.dispatch("getMinRating", this.minRating)
-                this.$store.dispatch('getMovies');
-
+                this.$store.dispatch('getMovies')
             }
         },
         sliderMaxRating: {
@@ -238,14 +213,14 @@ export default {
                 if(value < this.minRating) {
                     this.minRating = value
                     this.$store.dispatch("getMinRating", this.minRating)
-                    console.log(this.minRating);
-                    this.$store.dispatch('getMovies');
+                    console.log(this.minRating)
+                    this.$store.dispatch('getMovies')
 
                 }
                 this.maxRating = value
                 this.$store.dispatch("getMaxRating", this.maxRating)
-                console.log(this.maxRating);
-                this.$store.dispatch('getMovies');
+                console.log(this.maxRating)
+                this.$store.dispatch('getMovies')
 
             }
         },
@@ -258,15 +233,14 @@ export default {
                 value = parseInt(value)
                 if(value > this.maxYear) {
                     this.maxYear = value
-                    this.$store.dispatch("maxYear", this.MaxYear)
-                    console.log(this.maxYear);
-                this.$store.dispatch('getMovies');
-
+                    this.$store.dispatch("getMaxYear", this.maxYear)
+                    console.log(this.maxYear)
+                this.$store.dispatch('getMovies')
                 }
                 this.minYear = value
-                this.$store.dispatch("minYear", this.MinYear)
-                    console.log(this.minYear);
-                this.$store.dispatch('getMovies');
+                this.$store.dispatch("getMinYear", this.minYear)
+                    console.log(this.minYear)
+                this.$store.dispatch('getMovies')
 
                      
             }
@@ -280,13 +254,13 @@ export default {
                 value = parseInt(value)
                 if(value < this.minYear) {
                     this.minYear = value;
-                    this.$store.dispatch("minYear", this.MinYear);
-                    this.$store.dispatch('getMovies');
+                    this.$store.dispatch("getMinYear", this.minYear);
+                    this.$store.dispatch('getMovies')
 
                 }
                 this.maxYear = value;
-                this.$store.dispatch("maxYear", this.MaxYear);
-                this.$store.dispatch('getMovies');
+                this.$store.dispatch("getMaxYear", this.maxYear);
+                this.$store.dispatch('getMovies')
             }
         },
     }
