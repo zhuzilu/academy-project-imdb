@@ -1,25 +1,24 @@
 <template>
   <div class="main-section">
     <div class="results">
-      <h3 class="h3__title">Results from API</h3>
+      <h3 class="h3__title">Results</h3>
       <div class="card__section">
-        <div class="card__container" @click="dragStart()" @dragend="dragEnd()" draggable="true" 
-          v-for="(movie, index) in getMovies" :key="index">
-          <img class="card__poster" src="http://image.tmdb.org/t/p/w500//gh4cZbhZxyTbgxQPxD0dOudNPTn.jpg" alt="">
+        <div class="card__container" v-for="(movie, index) in getMovies" :key="index">
+          <img class="card__poster" :src="movie.image" alt="movie.primaryTitle">
           <div class="card__buttons">
-            <button href="#" class="card__button duration"><i class="uil uil-stopwatch"></i><span class="hidden">{{movie.runtimeMinutes}}<span class="bold">"</span></span></button>
-            <button href="#" class="card__button year"><i class="uil uil-schedule"></i><span class="hidden">{{movie.startYear}}</span></button>
+            <button class="card__button type">{{movie.titleType}}</button>
+            <button class="card__button duration"><i class="uil uil-stopwatch"></i><span class="hidden">{{movie.runtimeMinutes}}<span class="bold">"</span></span></button>
+            <button class="card__button year"><i class="uil uil-schedule"></i><span class="hidden">{{movie.startYear}}</span></button>
           </div>
           <div class="card__rating">
             <img draggable="false" class="card__imdb__icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/IMDB_Logo_2016.svg/2560px-IMDB_Logo_2016.svg.png" alt="">
             <p class="card__imdb__rating"><span class="bold">{{movie.averageRating}}</span>/10</p>
           </div>
           
-            <div class="card__type">
-              <p>{{movie.titleType}}</p>
+            <div class="card__genre">
+              <p v-for="(genre, index) in movie.genres" :key="index">{{ genre }}</p>            
             </div>
             
-          
           <div class="card__data">
             <p class="card__title"><span class="bold">{{movie.primaryTitle}}</span></p>
           </div>
@@ -27,15 +26,6 @@
       </div>
     </div>
 
-    <div 
-            class="dragdrop"
-            @dragover="dragOver" 
-            @dragenter="dragEnter" 
-            @dragleave="dragLeave" 
-            @drop="dragDrop" 
-        >
-            <h3 class="h3__title"><i class="uil uil-bookmark-full"></i> Drag & Drop from API</h3>
-        </div>
 
 
     </div>
@@ -65,35 +55,6 @@ export default defineComponent({
     },
     
   },
-     methods: {
-    dragStart: function() {
-        this.className += ' hold';
-    },
-
-    dragEnd: function() {
-        const imgDraggable = document.querySelector('.card__container');
-
-        imgDraggable.className = 'card__container'; 
-        //createStore.dispatch("getMovie", movie);
-    },
-
-    dragOver: function(e) {
-        const dragdrop = document.querySelector('.dragdrop');
-        e.preventDefault();
-    },
-    dragEnter: function() {
-        const dragdrop = document.querySelector('.dragdrop');
-        dragdrop.className += ' hovered';
-    },
-    dragDrop: function() {
-        const imgDraggable = document.querySelector('.card__container');
-
-
-        const dragdrop = document.querySelector('.dragdrop');
-        dragdrop.append(imgDraggable);
-
-    }
-    }
 });
 </script>
 
@@ -178,7 +139,15 @@ export default defineComponent({
 .card__button:hover::after{
     opacity: 1;
 }
-
+.type:hover{
+    width: 100px;
+    background-color: var(--pink-colour);
+}
+.type{
+    font-size: 0.9rem;
+    font-weight: 800;
+    width: 70px;
+}
 .year:hover{
     width: 100px;
 }
@@ -201,32 +170,32 @@ export default defineComponent({
 .card__container:hover > .card__rating{
     opacity: 1;
 }
-.card__container:hover > .card__type{
+.card__container:hover > .card__genre{
     opacity: 1;
 }
 .card__button:hover > .hidden{
     opacity: 1;
 }
-.card__type{
+.card__genre{
     position: absolute;
-    bottom: 30px;
+    bottom: 10px;
     right: 0;
-    width: 60px;
+    width: 77px;
     background: rgba(39, 38, 38, 0.7);
     color: white;
     margin-right: 10px;
     font-size: 0.8rem;
-    border-radius: 25px;
+    border-radius: 10px;
     padding: 5px;
     border: 1px solid white;
     opacity: 0;
     transition: .6s ease-in-out;
     font-weight: bold;
 }
-.card__type:hover{
+.card__genre:hover{
     background-color: var(--light-pink-colour);
 }
-.card__type p {
+.card__genre p {
     margin: 0;
 }
 
@@ -240,25 +209,18 @@ export default defineComponent({
     font-weight: bold;
     font-size: 1.1rem;
 }
-
-
+.results {
+    width: 100vw;
+    margin-left: 20px;
+}
 .main-section {
     display: grid;
-    grid-template-columns: 3fr 0.75fr;
     color: white;
-    height: 700px;
-    width: 700px;
+    height: 1000px;
 }
 .card__section {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-}
-.dragdrop{
-    border: 1px solid var(--light-purple-colour);
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-    width: 500px;
 }
 
 .hold{

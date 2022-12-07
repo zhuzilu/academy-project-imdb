@@ -12,9 +12,9 @@
                     <div class="slider" ref="slider">
                         <div class="slider__content">
                             <h3>Movies or TV series?<span class="small"> (Choose at least one)</span></h3>
-                                <input type="checkbox" class="checkbox" name="movies" id="movies" checked>
-                                <label for="movies" title="Movies" @click="filterType('movies')">🎬</label>
-                                <input type="checkbox" @click="filterType('tvSeries')" class="checkbox" name="tv" id="tv" checked>
+                                <input type="checkbox" @click="filterTypeMovie()" class="checkbox" name="movies" id="movies">
+                                <label for="movies" title="Movies">🎬</label>
+                                <input type="checkbox" @click="filterTypeTV()" class="checkbox" name="tv" id="tv">
                                 <label for="tv" title="TV series">📺</label>
                         </div>
 
@@ -42,8 +42,8 @@
                                 <label for="Documentary" title="Documentary">🧠</label>
                                 <input @click="filterMood('Fantasy')" class="checkbox" type="checkbox" name="🧝‍♀️" id="Fantasy">
                                 <label for="Fantasy" title="Fantasy">🧝‍♀️</label>
-                                <input @click="filterMood('Sci-fi')" class="checkbox" type="checkbox" name="👽" id="Sci-fi">
-                                <label for="Sci-fi" title="Sci-fi">👽</label>
+                                <input @click="filterMood('Sci-Fi')" class="checkbox" type="checkbox" name="👽" id="scifi">
+                                <label for="scifi" title="SciFi">👽</label>
                                 <input @click="filterMood('Crime')" class="checkbox" type="checkbox" name="🕵️" id="Crime">
                                 <label for="Crime" title="Crime">🕵️</label>
                                 <input @click="filterMood('War')" class="checkbox" type="checkbox" name="🪖" id="War">
@@ -101,29 +101,42 @@ export default {
                 1, 2, 3, 4, 5
             ],
             movie: {movies: []},
-            minDuration: 30,
+            minDuration: 90,
             maxDuration: 120,
-            minRating: 1,
-            maxRating: 10,
-            minYear: 1995,
+            minRating: 3,
+            maxRating: 9,
+            minYear: 1999,
             maxYear: 2023,
             show: false,
+            typeTv: false,
+            typeMovie: false,
         }
     },
 
     methods: {
-        filterType: function(filter) {
-            const moviestype = document.querySelector('#movies');
-            console.log("addFilter");
-            console.log(filter);
-            this.$store.dispatch('getMovies', filter)
+        filterTypeTV: function() {
+            if(this.typeTv == true) {
+                this.typeTv = false;
+                this.$store.dispatch("getTypeTv", false);
+            } else {
+                this.typeTv = true;
+                this.$store.dispatch("getTypeTv", true);
+            }
+            this.$store.dispatch('getMovies');
+        },
+        filterTypeMovie: function() {
+            if(this.typeMovie == true) {
+                this.typeMovie = false;
+                this.$store.dispatch("getTypeMovie", false);
+            } else {
+                this.typeMovie = true;
+                this.$store.dispatch("getTypeMovie", true);
+            }
+            this.$store.dispatch('getMovies');
         },
         filterMood: function(mood) {
-            this.$store.dispatch("filterGenre", true);
-            console.log(mood);
             this.$store.dispatch("getFilterGenre", mood);
             this.$store.dispatch('getMovies');
-
         },
         showFilters: function(payload) {
             this.show = payload;
@@ -134,10 +147,8 @@ export default {
                     top: element.offsetHeight * (n-1),
                     behavior: 'smooth'
                 })
-
         },
         minRating: function() {
-
         },
         save: function (value) {
         this.$store.dispatch('getMovies');
@@ -158,13 +169,10 @@ export default {
                     this.maxDuration = value
                     this.$store.dispatch("getMaxDuration", this.maxDuration)
                     this.$store.dispatch('getMovies')
-
                 }
                 this.minDuration = value
                 this.$store.dispatch("getMinDuration", this.minDuration)
                 this.$store.dispatch('getMovies')
-
-
             }
         },
         sliderMaxDuration: {
