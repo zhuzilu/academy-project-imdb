@@ -221,13 +221,11 @@ export default {
                 if(value < this.minRating) {
                     this.minRating = value
                     this.$store.dispatch("getMinRating", this.minRating)
-                    console.log(this.minRating)
                     this.$store.dispatch('getMovies')
 
                 }
                 this.maxRating = value
                 this.$store.dispatch("getMaxRating", this.maxRating)
-                console.log(this.maxRating)
                 this.$store.dispatch('getMovies')
 
             }
@@ -242,12 +240,10 @@ export default {
                 if(value > this.maxYear) {
                     this.maxYear = value
                     this.$store.dispatch("getMaxYear", this.maxYear)
-                    console.log(this.maxYear)
                 this.$store.dispatch('getMovies')
                 }
                 this.minYear = value
                 this.$store.dispatch("getMinYear", this.minYear)
-                    console.log(this.minYear)
                 this.$store.dispatch('getMovies')
 
                      
@@ -452,5 +448,27 @@ input[type=range]::-webkit-slider-thumb {
 }
 .small {
     font-size: 0.8rem;
+}
+@media only screen and (max-width: 768px) {
+    #filter__container{
+    padding: 5px;
+    margin: auto;
+    width: 80%;
+    background-color: white;
+    color: black;
+    height: 50vh;
+    border-radius: 10px;
+    border: 1px solid rgb(213, 213, 213);
+    box-shadow: 3px 5px 10px 3px rgba(79, 79, 79, 0.3);
+
+}
+label {
+    padding: 5px;
+    display: inline-block;
+    font-size: 1.5rem;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
 }
 </style>

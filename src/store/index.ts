@@ -90,68 +90,38 @@ export default createStore({
         }
       },
       async getMovies(context) {
-       
         let res;
+       
         if (this.state.mood.length > 0){
           if ( !this.state.typeTV && !this.state.typeMovie ) {
-            console.log("primer if tv movie no genres si");
             let moodList = this.state.mood.join(",");
-              console.log(moodList);
               res = await fetch(`http://localhost:8080/search/?maxNHits=20&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=tvSeries,movie&genres=${moodList}`);
-            console.log(res);
-
             } else if (this.state.typeTV && !this.state.typeMovie) {
-            console.log("segundo if tv si movies no genres si");
             const moodList = this.state.mood.join(",");
-            console.log(moodList);
               res = await fetch(`http://localhost:8080/search/?maxNHits=20&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=tvSeries&genres=${moodList}`);
-              console.log(res);
-
             } else if (!this.state.typeTV && this.state.typeMovie) {
-            console.log("tercer if tv no movie si genres si");
             let moodList = this.state.mood.join(",");
-              console.log(moodList);
               res = await fetch(`http://localhost:8080/search/?maxNHits=20&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=movie&genres=${moodList}`);
-              console.log(res);
-
             }  
         } else if (!this.state.typeTV && this.state.typeMovie) {
-          console.log("cuarto if tv no movie si genres no");
          
             let res = await fetch(`http://localhost:8080/search/?maxNHits=20&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=movie`);
-            console.log(res);
 
           } else if (!this.state.typeTV && !this.state.typeMovie) {
-            console.log("quinto if tv no movie no genres no");
-           
               res = await fetch(`http://localhost:8080/search/?maxNHits=20&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=movie,tvSeries`);
-              console.log(res);
-  
             }  
             else if (this.state.typeTV && !this.state.typeMovie) {
-              console.log("sexto if tv si movie no genres no");
-                console.log("tv");
-                console.log(this.state.typeTV);
-                console.log("movie");
-                console.log(this.state.typeMovie);
                 res = await fetch(`http://localhost:8080/search/?maxNHits=20&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=tvSeries`);
-                console.log(res);
-    
               }             
             else if (this.state.typeTV && this.state.typeMovie) {
-              console.log("7 if tv si movie si genres no");
-               
               res = await fetch(`http://localhost:8080/search/?maxNHits=20&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=tvSeries,movie`);
-              console.log(res);
-      
             }  
         else {
-          console.log("else");
             res = await fetch(`http://localhost:8080/search/?maxNHits=20&minYear=${this.state.minYear}&maxYear=${this.state.maxYear}&minScore=${this.state.minRating}&maxScore=${this.state.maxRating}&minMinutes=${this.state.minDuration}&maxMinutes=${this.state.maxDuration}&type=movie,tvSeries`);
-            console.log(res);
         }
       
-        
+
+      if(res){
         const data = await res.json();
         
         const movies = data.hits;
@@ -165,9 +135,10 @@ export default createStore({
           
         };
         
-        
         context.commit("setMovies", movies);
-
-        },
+        
+      }
+  
+      },
     },
 });

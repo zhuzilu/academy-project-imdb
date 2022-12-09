@@ -232,4 +232,39 @@ export default defineComponent({
 .invisible {
     display: none;
 }
+@media only screen and (max-width: 1050px) {
+
+.card__section {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-left: 3px;
+  padding-left:3px;
+}
+}
+@media only screen and (max-width: 768px) {
+
+    .card__section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+    margin-left: 3px;
+  padding-left:3px;
+}
+}
+@media only screen and (max-width: 610px) {
+    .card__section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+    margin-left: 3px;
+  padding-left:3px;
+}
+}
+@media only screen and (max-width: 450px) {
+
+    .card__section {
+  display: grid;
+  grid-template-columns: 1fr;
+    margin-left: 3px;
+  padding-left:3px;
+}
+}
 </style>

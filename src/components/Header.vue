@@ -1,7 +1,7 @@
 <template>
   <header>
     <h2>Next <span class="gradient">Favourite</span> Movie</h2>
-    <input id="input__search" type="text" placeholder="Open Filters or Insert API" @click="openSearch">
+    <input id="input__search" type="text" placeholder="Open Filters" @click="openSearch">
     <button class="filters__button" @click="openSearch">FILTERS <span class="arrow"><i id="uil" class="uil-angle-down"></i></span></button>
   </header>
 </template>
@@ -61,5 +61,21 @@ h2{
 }
 .arrow{
    font-size:1.5rem;
+}
+@media only screen and (max-width: 768px) {
+#input__search{
+    width: 300px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 0;
+}
+}
+@media only screen and (max-width: 400px) {
+#input__search{
+    width: 150px;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 0;
+}
 }
 </style>
