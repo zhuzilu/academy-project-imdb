@@ -1,5 +1,6 @@
-# imdb-project
-![Alt Text](https://github.com/zhuzilu/academy-project-imdb/blob/main/src/assets/demo.gif?raw=true)
+# Academy Project IMDB
+
+![Demo](https://github.com/zhuzilu/academy-project-imdb/blob/main/src/assets/demo.gif?raw=true)
 ## My team's back and search solutions:
 
 [Antón Vázquez](https://github.com/AntonVazquez) - [IMDB Project](https://github.com/AntonVazquez/Springboot_ElasticSeach)
@@ -9,19 +10,15 @@
 [Óscar Pérez](https://github.com/uo265488) - [IMDB Project](https://github.com/uo265488/SpringDataElastic_Getting_Started)
 
 ## Project setup
+
+### Clone project
 ```
-npm install
+git clone https://github.com/zhuzilu/academy-project-imdb/
 ```
 
-### Compiles and hot-reloads for development
+### Download and open Docker
 ```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
+docker-compose up --build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+* Bear in mind that the API used to get the poster images [OMDB API](https://www.omdbapi.com/) has a free limit of 1.000 requests per day.
