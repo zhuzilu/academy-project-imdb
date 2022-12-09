@@ -1,5 +1,5 @@
 # imdb-project
-
+![Alt Text](https://github.com/zhuzilu/academy-project-imdb/blob/main/src/assets/demo.gif?raw=true)
 ## My team's back and search solutions:
 
 [Antón Vázquez](https://github.com/AntonVazquez) - [IMDB Project](https://github.com/AntonVazquez/Springboot_ElasticSeach)
